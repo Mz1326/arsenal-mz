@@ -1,0 +1,21 @@
+1>可能是层级的问题
+2>在框架中（例如easyUI）中 富文本编辑器被解析成只读属性，则默认关闭了backspace（退格键的功能），解决方法：用js脚本做判断就行。
+$(function () {
+    document.documentElement.onkeydown = function (evt) {
+        var b = !!evt, oEvent = evt || window.event;
+        if (oEvent.keyCode == 8) {//BackSpace  键
+            var node = b ? oEvent.target : oEvent.srcElement;
+            var reg = /^(input|textarea)$/i, regType = /^(text|textarea)$/i;
+            if (!reg.test(node.nodeName) || !regType.test(node.type) || node.readOnly || node.disabled) {
+                if (b) {
+                    oEvent.stopPropagation();
+                }
+                else {
+                    oEvent.cancelBubble = true;
+                    oEvent.keyCode = 0;
+                    oEvent.returnValue = false;
+                }
+            }
+        }
+    }
+})
